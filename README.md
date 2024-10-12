@@ -12,7 +12,7 @@ It's your one-stop shop for navigating your educational journey at GSU. Navigati
 
 ## Technologies Used
 Developed using a robust tech stack, GSU Registration leverages:
-- **Backend:** Python, Flask (for web app framework development), MySQL (for data infrastructure), SQL Alchemy (for database management). These powerful tools form the backbone of the project, allowing for efficient data manipulation and web application development.
+- **Backend:** Python, Flask , MySQL , SQL Alchemy. These powerful tools form the backbone of the project, allowing for efficient data manipulation and web application development.
 - **Web Parsing:** Selenium (for data retrieval from external websites).
 - **Security:** Flask Login and Security (for user authentication and secure access), cyptography(password encryption).
 - **Cloud Storage:** AWS (for online database storage and special security features).  Cloud-based storage ensures reliable access and enhanced security for your data.

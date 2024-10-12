@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style-reg.css')}}">
+    
+
+</head>
+<body>
+        
+        <table class="container">
+            <thead>
+                <tr>
+                    <th><h1>Course</h1></th>
+                    <th><h1>Title</h1></th>
+                    <th><h1>Credits</h1></th>
+                    <th><h1>Prerequisite</h1></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in subject_info %} 
+                <tr>
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                </tr> 
+                {%endfor%}
+            </tbody>
+            <form action="#" method = "POST" id="myForm">
+                <button>Upvote</button>
+            </form>  
+        </table>
+
+</body>
+
+
+
+<script>
+    function setValueAndHide(value, buttonId) {
+        // Set the hidden input value to the specified value
+        document.getElementById('hiddenInput').value = value;
+
+        // Hide the button that was clicked
+        const button = document.getElementById(buttonId);
+        button.classList.add('hidden');
+        document.getElementById('myForm').submit();
+    }
+</script>

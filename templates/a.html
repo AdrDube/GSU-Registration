@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disappearing Buttons Form</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            gap: 20px;
+        }
+        .disappearing-button {
+            padding: 15px 30px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 2s ease;
+        }
+        .hidden {
+            opacity: 0;
+            pointer-events: none; 
+            }
+        .message {
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <form method="POST" id="Hie">
+        <input type="hidden" id="selected-value" name="selectedValue" value="">
+
+        {%for subject in remaining%}
+            <button type="button" class="disappearing-button" onclick="submitValue('{{subject}}', this)">{{subject}}</button>
+        {%endfor%}
+        <button type="button" class="disappearing-button" onclick="submitValue('Next', this)"> Next </button>
+       
+    </form>
+
+    <script>
+  
+        function submitValue(value, button) {
+
+            document.getElementById('selected-value').value = value;
+            button.classList.add('hidden');
+
+            setTimeout(function() {
+            document.getElementById('Hie').submit();
+        }, 1000);
+        }
+           
+    </script>
+
+</body>
+</html>

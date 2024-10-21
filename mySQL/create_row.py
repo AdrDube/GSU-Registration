@@ -6,7 +6,7 @@ secrets = dotenv_values(env)
 
 dbs = mysql.connector.connect(host=secrets["mysql_host"], 
                               user=secrets["mysql_user"],
-                              password=secrets["mysql_password"], 
+                              password=secrets["mysql_password"],
                               database=secrets["mysql_database"])
 cursor = dbs.cursor()
 
@@ -36,3 +36,4 @@ def val_in_dbs(reg_username, reg_password):
     if val:
         return True
     return False
+    

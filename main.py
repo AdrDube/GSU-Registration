@@ -80,7 +80,7 @@ def register():
             new_user = Student(username=reg_username, password = password) 
             db.session.add(new_user)
             db.session.commit()
-            login_user(user)
+            login_user(new_user)
             return redirect(url_for("web"))
         return redirect(url_for("invalid_works"))
     return render_template("works.html")

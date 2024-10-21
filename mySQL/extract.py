@@ -9,7 +9,7 @@ dbs=mysql.connector.connect( host=secrets["mysql_host"],
                               password=secrets["mysql_password"], 
                               database=secrets["mysql_database"])
 
-
+cursor=dbs.cursor()
 '''
 def get_works_info(name, password):
     """

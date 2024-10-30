@@ -15,6 +15,7 @@ try:
 except mysql.connector.Error as err:
     print(f"Error: {err}")
 
+
 '''
 def add_works_info(reg_username, reg_password):
     

@@ -13,6 +13,7 @@ dbs = mysql.connector.connect(
     port=secrets["port"]
 )
 
+
 cursor = dbs.cursor()
 
 def taken_info(taken):

@@ -17,27 +17,29 @@ user = secrets["mysql_user"]
 password = secrets["mysql_password"]
 database = secrets["mysql_database"]
 port = secrets["port"]
+
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}'
 
 app.secret_key = secrets["secret_key"]
 
-login = LoginManager()
-login.init_app(app)
-db = SQLAlchemy(app)
+login=LoginManager()
+login.__init__(app)
+db=SQLAlchemy(app)
 
 class Student(UserMixin, db.Model):
     __tablename__ = 'students'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30))
-    password = db.Column(db.String(100))
-    g_num = db.Column(db.String(100))
-    web_pin = db.Column(db.String(100))
+    id=db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(30)) 
+    password= db.Column(db.String(100))
+    g_num= db.Column(db.String(100))
+    web_pin= db.Column(db.String(100))
+
 
 @login.user_loader
 def load_user(user_id):
     return Student.query.get(int(user_id))
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET","POST"])
 def login():
     if request.method == "POST":
         data = request.form
@@ -110,9 +112,9 @@ def web():
             g_num = cipher.encrypt(g_num.encode())
             web_pin = cipher.encrypt(web_pin.encode())
             db.session.query(Student).filter_by(username=session['username']).update(
-                {'g_num': g_num, 'web_pin': web_pin}
-            )
-            db.session.commit()
+                        {'g_num': g_num, 'web_pin': web_pin}
+                        )
+            db.session.commit()       
             return redirect(url_for("homepage"))
         return render_template("invalid_web.html")
     return render_template("web.html")
@@ -156,8 +158,8 @@ def homepage():
     subjects = get_transcripts(current_user.username, cipher.decrypt(current_user.password).decode())
     subject_info = taken_info(subjects)
     session["remaining"] = get_remaining(subjects)
-    session["requested"] = []
-    session["index"] = 0
+    session["requested"]=[]
+    session["index"]=0
     return render_template("reg_page.html", subject_info=subject_info)
 
 @app.route("/choice", methods=["GET", "POST"])

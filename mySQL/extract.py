@@ -5,6 +5,7 @@ from dotenv import dotenv_values
 env = os.path.join(os.path.dirname(__file__), '..', '.env')
 secrets = dotenv_values(env)
 
+<<<<<<< HEAD
 dbs = mysql.connector.connect(
     host=secrets["mysql_host"],
     user=secrets["mysql_user"],
@@ -34,6 +35,18 @@ def get_remaining(taken):
     return [i[0] for i in remaining]
 
 '''def get_works_info(name, password):
+=======
+dbs=mysql.connector.connect(host=secrets["mysql_host"],
+                            port=secrets["port"],   
+                            user=secrets["mysql_user"],
+                            password=secrets["mysql_password"], 
+                            database=secrets["mysql_database"])
+
+cursor=dbs.cursor()
+
+'''
+def get_works_info(name, password):
+>>>>>>> 3da02ee (hey Jude)
     """
     Takes id of the data from table students in mySQL.
 

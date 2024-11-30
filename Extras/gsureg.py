@@ -140,7 +140,7 @@ def all_times():
 
         
 if __name__=="__main__":
-    find_classes(os.getenv('username'), os.getenv('password'), "fall", "2024")
+    find_classes("G00450781", "838383", "fall", "2024")
     #subjects=specific_times(['FYE 102', 'BIOL 113', 'MATH 154', 'BIOL 115', 'CS 120', 'HIST 104', 'ENG 102'])
-    all_courses = all_times()
+    #all_courses = all_times()
    

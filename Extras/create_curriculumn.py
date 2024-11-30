@@ -17,15 +17,12 @@ def main():
       env = os.path.join('.env')
       secrets = dotenv_values(env)
       dbs = mysql.connector.connect(host=secrets["mysql_host"],
-                                    port=3307, 
+                                    port=3308, 
                                     user=secrets["mysql_user"],
                                     password=secrets["mysql_password"], 
                                     database=secrets["mysql_database"])
       cursor=dbs.cursor()  
       curriculumn= get_curriculumn2()
-      print(curriculumn)
-      cursor.execute("DROP TABLE cs_curriculumn")
-      dbs.commit()
       cursor.execute("CREATE TABLE cs_curriculumn (course VARCHAR(10) PRIMARY KEY, title VARCHAR(75), credits SMALLINT, prerequisite VARCHAR(15), year SMALLINT)")
       cursor.executemany("INSERT INTO cs_curriculumn (course, title, credits, prerequisite, year) VALUES (%s, %s, %s, %s, %s)",curriculumn )
       dbs.commit()
@@ -37,3 +34,4 @@ def main():
 
 if __name__=="__main__":
     main()
+

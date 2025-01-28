@@ -7,7 +7,6 @@ from dotenv import dotenv_values
 from mySQL import taken_info, get_remaining
 from cryptography.fernet import Fernet
 import sys
-
 app = Flask("My app")
 secrets = dotenv_values(".env")
 
@@ -89,13 +88,8 @@ def register():
 def invalid_works():
     if request.method == "POST":
         data = request.form
-<<<<<<< HEAD
         reg_username = data["reg_name"]
         reg_password = data["password"]
-=======
-        reg_username= data["reg_name"]
-        reg_password= data["reg_password"]
->>>>>>> 3da02ee (hey Jude)
         if Student.query.filter_by(username=reg_username).first():
             return redirect(url_for("in_dbs"))
         if valid_works(reg_username, reg_password):
@@ -103,10 +97,6 @@ def invalid_works():
             new_user = Student(username=reg_username, password=password)
             db.session.add(new_user)
             db.session.commit()
-<<<<<<< HEAD
-=======
-
->>>>>>> 3da02ee (hey Jude)
             login_user(new_user)
             return redirect(url_for("web"))
     return render_template("invalid_works.html")
@@ -187,3 +177,5 @@ def choice():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
+
+

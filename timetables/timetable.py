@@ -36,9 +36,6 @@ def create_timetable(chosen):
 
         if index==len(chosen) or total > 18 or len(return_array) > 10:
             return
-        
-      
-        
         #dfs algorithm to create the suitable timetable starting from index 0
         cursor.execute("SELECT CRN, DAYS, TIME FROM Classes WHERE SUBJECT= %s AND COURSE = %s", [chosen[index][0], chosen[index][1]])
         val=cursor.fetchall()

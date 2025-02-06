@@ -1,6 +1,6 @@
 from flask import request, render_template, Flask, url_for, redirect, session, flash
 from validity import valid_web, valid_works
-from courses import get_transcripts
+from courses import get_transcripts, get_degree_info
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from functools import wraps
@@ -38,9 +38,9 @@ class Student(UserMixin, db.Model):
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not session:  # Adjust this based on your session key
+        if not session:
             flash('Please log in to access this page.', 'warning')
-            return redirect(url_for('login'))
+            return redirect(url_for(login))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -50,26 +50,22 @@ def load_user(user):
 
 
 
-@app.route("/login", methods=["GET","POST"])
+@app.route("/", methods=["GET","POST"])
 def login():
     if request.method == "POST":
         data = request.form
         username = data["username"]
         password = data["password"]
         user = Student.query.filter_by(username=username).first()
-        print(user)
         if user and password == cipher.decrypt(user.password).decode():
             login_user(user)
             flash("Successful. Logging in...", "success") 
-            return render_template('login.html', redirect_target=url_for('homepage'))
+            return render_template('index.html',login=True, redirect_target=url_for('homepage'))
         flash("Invalid login details. Try again", "error")
+
     return render_template("index.html", login=True)
 
-@app.route('/logout')
-def logout():
-    session.pop('user_email', None)
-    flash('Logged out successfully!')
-    return redirect(url_for('login'))
+
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -106,15 +102,20 @@ def register():
 @app.route("/homepage", methods=["GET", "POST"])
 @login_required
 def homepage():
-    if session:
+    if current_user:
         if request.method == "POST":
             return redirect(url_for("choice"))
-        subjects = get_transcripts(current_user.username, cipher.decrypt(current_user.password).decode())
-        subject_info = taken_info(subjects)
-        session["remaining"] = get_remaining(subjects)
-        session["requested"]=[]
-        session["index"]=0
-        return render_template("reg_page.html", subject_info=subject_info)
+
+        degree_info = get_degree_info(current_user.username, cipher.decrypt(current_user.password).decode())
+        if degree_info.get("error"):
+            flash(degree_info["error"], "error")
+            return url_for(homepage)
+        else:
+            session["remaining"] = get_remaining(degree_info["classes_taken"])
+            session["requested"]=[]
+            session["index"]=0
+            subject_info = taken_info(degree_info["classes_taken"])
+            return render_template("reg_page.html", subject_info=subject_info)
     else:
         return redirect(url_for('logout'))
 

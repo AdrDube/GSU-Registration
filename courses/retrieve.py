@@ -65,6 +65,7 @@ def get_degree_info(name, password):
     menu = False
     extracted=False
     profile={}
+    timeout=0
     while not extracted:
         try:
             while not menu:
@@ -105,6 +106,14 @@ def get_degree_info(name, password):
         except StaleElementReferenceException:
             print("Stale Elem. Reload in progress")
         except TimeoutException:
+            timeout+=1
+            try:
+                driver.find_element("xpath","/html/body/div/div/div/div/form/div[2]/input[1]")
+                return { "error": "Your password has changed. Check your login details and try"}
+            except:
+                pass
+            if timeout==3:
+                return {"error": "Degree works is currently unavailable, please try agiain later"}
             print("Timeout")
 
 

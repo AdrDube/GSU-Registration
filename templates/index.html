@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Regstration/Login</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
-  <meta http-equiv="refresh" content="2; URL={{ redirect_target or url_for('homepage') }}">  </head>
 
 </head>
 <body>
@@ -101,16 +100,28 @@
 function toggleForm(event, link) {
     event.preventDefault(); // Prevent immediate navigation
 
-    // Toggle the login and signup forms
     document.getElementById("login-form").classList.toggle("active");
     document.getElementById("signup-form").classList.toggle("active");
 
     // Delay navigation slightly (if needed)
     setTimeout(() => {
         window.location.href = link.href;
-    }, 3000); // Adjust delay if needed
+    }, 3000); 
 }
 </script>
+</script>
+<script>
+  function redirectIfTarget() {
+      const redirectTarget = "{{ redirect_target }}";
+      if (redirectTarget) {
+          setTimeout(() => {
+              window.location.href = redirectTarget;
+          }, 2000); // 2 seconds
+      }
+  }
+
+  // Call the function when the page loads
+  window.onload = redirectIfTarget;
 </script>
 </body>
 </html>

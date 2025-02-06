@@ -47,7 +47,10 @@ def login_required(f):
 @login.user_loader
 def load_user(user):
     return Student.query.get(user)
-@app.route("/", methods=["GET","POST"])
+
+
+
+@app.route("/login", methods=["GET","POST"])
 def login():
     if request.method == "POST":
         data = request.form
@@ -62,7 +65,11 @@ def login():
         flash("Invalid login details. Try again", "error")
     return render_template("index.html", login=True)
 
-
+@app.route('/logout')
+def logout():
+    session.pop('user_email', None)
+    flash('Logged out successfully!')
+    return redirect(url_for('login'))
 
 
 @app.route("/register", methods=["GET", "POST"])

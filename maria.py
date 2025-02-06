@@ -18,7 +18,6 @@ user = secrets["mysql_user"]
 password = secrets["mysql_password"]
 database = secrets["mysql_database"]
 port = secrets["port"]
-
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}'
 
 app.secret_key = secrets["secret_key"]
@@ -47,6 +46,7 @@ def login_required(f):
 @login.user_loader
 def load_user(user):
     return Student.query.get(user)
+
 @app.route("/", methods=["GET","POST"])
 def login():
     if request.method == "POST":
@@ -57,8 +57,7 @@ def login():
         print(user)
         if user and password == cipher.decrypt(user.password).decode():
             login_user(user)
-            flash("Successful. Logging in...", "success") 
-            return render_template('login.html', redirect_target=url_for('homepage'))
+            return redirect(url_for("homepage"))
         flash("Invalid login details. Try again", "error")
     return render_template("index.html", login=True)
 
@@ -96,36 +95,14 @@ def register():
 
     return render_template("index.html", login=False)
 
-@app.route("/homepage", methods=["GET", "POST"])
-@login_required
-def homepage():
-    if session:
-        if request.method == "POST":
-            return redirect(url_for("choice"))
-        subjects = get_transcripts(current_user.username, cipher.decrypt(current_user.password).decode())
-        subject_info = taken_info(subjects)
-        session["remaining"] = get_remaining(subjects)
-        session["requested"]=[]
-        session["index"]=0
-        return render_template("reg_page.html", subject_info=subject_info)
-    else:
-        return redirect(url_for('logout'))
 
-@app.route("/choice", methods=["GET", "POST"])
-@login_required
-def choice():
-    if session:
-        if request.method == "POST":
-            subject = request.form["selectedValue"]
-            session["index"] += 1
-            if session["index"] > 7 or subject == 'Next':
-                return f"{session['requested']}"
-            session["requested"].append(subject)
-            session["remaining"].remove(subject)
-            session.modified = True
-        return render_template("a.html", remaining=session["remaining"])
-    else:
-        return redirect(url_for('logout'))
+     
+@app.route('/logout')
+def logout():
+    session.pop('user_email', None)
+    flash('Logged out successfully!')
+    return redirect(url_for('login'))
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+
+
+app.run(debug=True)

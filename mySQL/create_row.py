@@ -1,7 +1,9 @@
 import mysql.connector
 from dotenv import dotenv_values
+import os
 
-secrets = dotenv_values(".env")
+env = os.path.join(os.path.dirname(__file__), '..', '.env')
+secrets = dotenv_values(env)
 
 try:
     dbs = mysql.connector.connect(
@@ -15,13 +17,6 @@ try:
     print("Connection successful")
 except mysql.connector.Error as err:
     print(f"Error: {err}")
-
-dbs = mysql.connector.connect(host = secrets["mysql_host"],
-                              port = secrets["port"], 
-                              user = secrets["mysql_user"],
-                              password = secrets["mysql_password"],
-                              database = secrets["mysql_database"])
-cursor = dbs.cursor()
 
 
 '''
@@ -50,4 +45,4 @@ def val_in_dbs(reg_username, reg_password):
     if val:
         return True
     return False
-    
+ 

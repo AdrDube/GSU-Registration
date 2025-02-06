@@ -5,17 +5,20 @@ from dotenv import dotenv_values
 
 env = os.path.join(os.path.dirname(__file__), '..', '.env')
 secrets = dotenv_values(env)
-dbs = mysql.connector.connect(
-    host=secrets["mysql_host"],
-    user=secrets["mysql_user"],
-    password=secrets["mysql_password"],
-    database=secrets["mysql_database"],
-    port=secrets["port"]
-)
 
-
-cursor = dbs.cursor()
-
+try:
+    dbs = mysql.connector.connect(
+        host=secrets["mysql_host"],
+        user=secrets["mysql_user"],
+        password=secrets["mysql_password"],
+        database=secrets["mysql_database"],
+        port=secrets["port"]
+    )
+    cursor=dbs.cursor()
+    print("Connection successful")
+except mysql.connector.Error as err:
+    print(f"Error: {err}")
+    
 def taken_info(taken):
     taken_courses = []
     for course in taken:
@@ -50,13 +53,5 @@ def get_remaining(taken):
     return val
 '''
 
-
-from cryptography.fernet import Fernet
-cipher = Fernet(secrets["cipher"].encode('utf-8'))
-cursor.execute("SELECT * FROM students")
-val=cursor.fetchall()
-for i in val:
-    print(cipher.decrypt(i[2]).decode())
-    print(cipher.decrypt(i[3]).decode())
 
 

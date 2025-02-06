@@ -17,7 +17,7 @@ def main():
       env = os.path.join('.env')
       secrets = dotenv_values(env)
       dbs = mysql.connector.connect(host=secrets["mysql_host"],
-                                    port=3308, 
+                                    port=secrets["port"], 
                                     user=secrets["mysql_user"],
                                     password=secrets["mysql_password"], 
                                     database=secrets["mysql_database"])

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Scheduler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.styles.css') }}">
+    <!--<link rel="stylesheet" href="../static/css/chat.styles.css">-->
+</head>
+<body>
+    <header>
+        <h1>Class Scheduler</h1>
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="#">Dashboard</a>
+                <a href="#">Profile</a>
+                <a href="#">Logout</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <form id="schedule-form">
+            <label for="class-select">Choose a Class:</label>
+            <select id="class-select">
+                <option value="Biology 113">Biology 113</option>
+                <option value="Chemistry 101">Chemistry 101</option>
+                <option value="Physics 210">Physics 210</option>
+            </select>
+            
+            <label for="time-select">Choose a Time:</label>
+            <select id="time-select">
+                <option value="MWF 09:00am-10:00am">MWF 09:00am-10:00am</option>
+                <option value="TTh 11:00am-12:30pm">TTh 11:00am-12:30pm</option>
+                <option value="MWF 02:00pm-03:00pm">MWF 02:00pm-03:00pm</option>
+            </select>
+            
+            <button type="button" id="submit-btn">Submit</button>
+        </form>
+        
+        <table id="schedule-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Sunday</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be dynamically generated -->
+            </tbody>
+        </table>
+    </main>
+    
+    <script src="{{ url_for('static', filename='js/chatJava.js') }}"></script>
+</body>
+</html>

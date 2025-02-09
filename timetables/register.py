@@ -10,6 +10,9 @@ chrome_options.add_experimental_option("detach", True)
 
 
 def add_crns(g_num, web_pin, courses):
+
+
+    
     #Login to Banner Web
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://ssb-prod.ec.gram.edu/PROD/twbkwbis.P_GenMenu?name=homepage")
@@ -24,16 +27,18 @@ def add_crns(g_num, web_pin, courses):
 
     #Registation
     driver.find_element(By.XPATH, '/html/body/div[3]/table[1]/tbody/tr[2]/td[2]/a').click()
-    
-    #Add or drop classes
+
+     #Add or drop classes
     driver.find_element(By.XPATH, '/html/body/div[3]/table[1]/tbody/tr[3]/td[2]/a').click()
+   
+    """
+   
     driver.find_element(By.XPATH, '/html/body/div[3]/form/input').click()
-    
-    #add CRNs
+     #add CRNs
     for index, crn  in enumerate(courses):
         driver.find_element(By.XPATH,f'/html/body/div[3]/form/table[3]/tbody/tr[2]/td[{index+1}]/input[2]').send_keys(crn)
     
     #submit classes
     driver.find_element(By.XPATH, '/html/body/div[3]/form/input[19]').click()
-
-add_crns("G00450781", "838383", ['22315', '21606', '21173', '21495', '22623'])
+    """
+   

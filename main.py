@@ -40,14 +40,13 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if not session:
             flash('Please log in to access this page.', 'warning')
-            return redirect(url_for(login))
+            return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated_function
 
 @login.user_loader
 def load_user(user):
     return Student.query.get(user)
-
 
 
 @app.route("/", methods=["GET","POST"])
@@ -60,7 +59,7 @@ def login():
         if user and password == cipher.decrypt(user.password).decode():
             login_user(user)
             flash("Successful. Logging in...", "success") 
-            return render_template('index.html',login=True, redirect_target=url_for('homepage'))
+            return render_template('index.html',login=True, redirect_target=url_for("dashboard"))
         flash("Invalid login details. Try again", "error")
 
     return render_template("index.html", login=True)
@@ -96,7 +95,7 @@ def register():
             flash("Banner web login details are not accurate, try again",  "error")
         else:
             flash("Degree Works is inaccurate, try again",  "error")
-
+ 
     return render_template("index.html", login=False)
 
 @app.route("/homepage", methods=["GET", "POST"])
@@ -117,8 +116,18 @@ def homepage():
             subject_info = taken_info(degree_info["classes_taken"])
             return render_template("reg_page.html", subject_info=subject_info)
     else:
+        return redirect(url_for('logout'))   
+    
+@app.route("/dashboard", methods=["GET", "POST"])
+@login_required
+def dashboard():
+    if session:
+        return render_template("dashboard.html")
+    else:
         return redirect(url_for('logout'))
-
+    
+    
+    
 @app.route("/choice", methods=["GET", "POST"])
 @login_required
 def choice():
@@ -134,6 +143,8 @@ def choice():
         return render_template("a.html", remaining=session["remaining"])
     else:
         return redirect(url_for('logout'))
+    
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

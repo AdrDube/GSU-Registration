@@ -10,9 +10,6 @@ chrome_options.add_experimental_option("detach", True)
 
 
 def add_crns(g_num, web_pin, courses):
-
-
-    
     #Login to Banner Web
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://ssb-prod.ec.gram.edu/PROD/twbkwbis.P_GenMenu?name=homepage")

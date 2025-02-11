@@ -1,8 +1,9 @@
 from flask import request, render_template, Flask, url_for, redirect, session, flash
 from validity import valid_web, valid_works
-from courses import get_transcripts, get_degree_info
+from courses import get_degree_info
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
+from timetables import retrieve_classes_website, clash, convert_time
 from functools import wraps
 from dotenv import dotenv_values
 from mySQL import taken_info, get_remaining
@@ -48,6 +49,12 @@ def login_required(f):
 def load_user(user):
     return Student.query.get(user)
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('Logged out successfully!')
+    return redirect(url_for('login'))
+
 
 @app.route("/", methods=["GET","POST"])
 def login():
@@ -63,9 +70,6 @@ def login():
         flash("Invalid login details. Try again", "error")
 
     return render_template("index.html", login=True)
-
-
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -122,9 +126,21 @@ def homepage():
 @login_required
 def dashboard():
     if session:
-        return render_template("dashboard.html")
+        if not session.get("remaining", None):
+            degree_info = get_degree_info(current_user.username, cipher.decrypt(current_user.password).decode())
+            if degree_info.get("error"):
+                flash(degree_info["error"], "error")
+                return url_for(homepage)
+            else:
+                session["remaining"] = get_remaining(degree_info["classes_taken"])  
+ 
+            session["available_courses"] = retrieve_classes_website(session["remaining"])
+        return render_template("dashboard.html", subjects = session["available_courses"])
+    
     else:
         return redirect(url_for('logout'))
+
+
     
     
     
@@ -144,6 +160,44 @@ def choice():
     else:
         return redirect(url_for('logout'))
     
+@app.route('/submit', methods=['POST'])
+def submit():
+    subject = request.form.get('subject')
+    crn = request.form.get('crn')
+    days = request.form.get('days')
+    time = request.form.get('timeSel')
+    converted_time= convert_time(time)   
+    
+    print(subject, crn, days, time, converted_time)
+    # check if schedule created
+    if not session.get("schedule"):
+        session["schedule"] = { crn:{"subject": subject, "days":days, "time": time, "converted_time":converted_time} }
+        flash("Course added successfully")
+        return redirect(url_for('dashboard'))
+    
+    clashes = clash(session["schedule"], crn, subject, days, converted_time)
+    if not clashes[0] :
+        session["schedule"][crn] = {"subject": subject, "days":days, "time": time, "converted_time":converted_time}
+        flash(clashes[1], "success")  
+        return redirect(url_for('dashboard'))
+    
+    flash(clashes[1], "error")
+    return redirect(url_for('dashboard'))
+
+
+@login_required 
+@app.route('/added')
+def added():
+    print( session["schedule"] )
+    return redirect(url_for('dashboard'))
+
+
+@app.route('/randomizer', methods=['POST'])
+def submit_class_count():
+    class_count = request.form.get('classCount')
+    print(f"Classes selected: {class_count}")
+    return redirect(url_for("dashboard"))
+
 
 
 if __name__ == "__main__":

@@ -17,6 +17,7 @@ dbs = mysql.connector.connect(host=secrets["mysql_host"],
 cursor = dbs.cursor()
 query = "select * from Classes where SUBJECT = %s AND COURSE = %s"
 
+
 def convert_time(time_range):
     """
     Convert a time range string into a tuple of datetime.time objects.
@@ -33,20 +34,18 @@ def convert_time(time_range):
         return ("TBA",)
     start_str, end_str = time_range.split('-') 
     
-    start_time = datetime.strptime(start_str.strip(), "%I:%M %p").time()
-    end_time = datetime.strptime(end_str.strip(), "%I:%M %p").time()
+    start_time = datetime.strptime(start_str, "%I:%M %p").strftime("%H:%M")
+    end_time = datetime.strptime(end_str, "%I:%M %p").strftime("%H:%M")
     
     return (start_time, end_time)
 
-print(convert_time("08:00 am-09:00 am"))
-
-
-def retrieve_offered_classes(lst):
+def retrieve_offered_classes(lst, convert=True):
     result = defaultdict(list)
     for subj in lst:
         query = "select CRN, DAYS, TIME from Classes where SUBJECT = %s AND COURSE = %s"
         try:
-            cursor.execute(query, (subj[0], subj[1]))
+            split_subj= subj.split()
+            cursor.execute(query, (split_subj[0], split_subj[1]))
             val = cursor.fetchall()
         except Exception as e:
             print(f"Error retrieving data for {subj}: {e}")
@@ -54,7 +53,16 @@ def retrieve_offered_classes(lst):
         
         for elem in val:
             elem = list(elem)
-            elem[2] = convert_time(elem[2])
-            result[subj].append(tuple(elem))
+            if convert: elem[2] = convert_time(elem[2])
+            result[subj].append((elem))
     return result
-    
+
+def retrieve_classes_website(classes_taken):
+    """_summary_
+    Args:
+        lst (list): a list of subjects in the format ["BIOL 115", "CHEM 209"]
+    Returns:
+        defaultdict(list): the subject and its corresponding CRNs, Days and Times, Professor
+    """
+    return retrieve_offered_classes(classes_taken, convert=False)
+

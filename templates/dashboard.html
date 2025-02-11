@@ -6,6 +6,99 @@
     <title>Class Scheduler</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.styles.css') }}">
     <!--<link rel="stylesheet" href="../static/css/chat.styles.css">-->
+<script>
+        function updateTimes() {
+            var subject = document.getElementById("subject").value;
+            var timeDropdown = document.getElementById("time");
+    
+            // Clear previous options
+            timeDropdown.innerHTML = "";
+    
+            // Fetch available times from the subjects dataset
+            var availableTimes = JSON.parse('{{ subjects|tojson|safe }}')[subject];
+    
+            // Populate new options
+            if (availableTimes) {
+                availableTimes.forEach(function(time) {
+                    // Example of time format: [CRN, Days, Time]
+                    var crn = time[0];  // CRN is the first element
+                    var days = time[1]; // Days
+                    var timeSlot = time[2]; // Time
+    
+                    var option = document.createElement("option");
+                    option.value = `${crn} | ${days} | ${timeSlot}`; // Display format
+                    option.textContent = `${crn} | ${days} | ${timeSlot}`; // Display format
+                    
+                    // Store vals as a data attribute for easy access
+                    option.setAttribute('data-crn', crn);
+                    option.setAttribute("data-days", days);
+                    option.setAttribute("data-timeSel", timeSlot);
+    
+                    // Append option to dropdown
+                    timeDropdown.appendChild(option);
+                });
+            }
+        }
+    
+        function getSelected() {
+            var subjectDropdown = document.getElementById("subject");
+            var timeDropdown = document.getElementById("time");
+            var selectedOption = timeDropdown.options[timeDropdown.selectedIndex];
+    
+            // Retrieve the CRN from the data attribute
+            var selectedSubject = subjectDropdown.value;
+            var selectedCRN = selectedOption ? selectedOption.getAttribute('data-crn') : null;
+            var selectedDays = selectedOption ? selectedOption.getAttribute('data-days') : null;
+            var selectedTime = selectedOption ? selectedOption.getAttribute('data-timeSel') : null;
+
+            return { subject: selectedSubject, crn: selectedCRN, days: selectedDays, timeSel: selectedTime };
+
+        }
+</script>
+<script>
+    let classCount = 1; // Default starting count
+    const maxClasses = 6; // Maximum number of classes
+
+    // Function to update the class count
+    function updateCount() {
+        document.getElementById("classCount").textContent = classCount;
+    }
+
+    // Increment function
+    function increment() {
+        if (classCount < maxClasses) {
+            classCount++;
+            updateCount();
+        }
+    }
+
+    // Decrement function
+    function decrement() {
+        if (classCount > 1) {
+            classCount--;
+            updateCount();
+        }
+    }
+
+    // Show counter
+    function Show() {
+        document.getElementById("counterSection").style.display = 'block';
+        
+    }
+
+    // Function to submit the number of classes via POST
+    function submitClassCount() {
+        const formData = new FormData();
+        formData.append("classCount", classCount);
+
+        fetch('/randomizer', {
+        method: 'POST',
+        body: formData
+    })
+    }
+</script>
+
+
 </head>
 <body>
     <header>
@@ -21,24 +114,49 @@
     </header>
     
     <main>
-        <form id="schedule-form">
-            <label for="class-select">Choose a Class:</label>
-            <select id="class-select">
-                <option value="Biology 113">Biology 113</option>
-                <option value="Chemistry 101">Chemistry 101</option>
-                <option value="Physics 210">Physics 210</option>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+          </div>
+        {% endif %}
+        {% endwith %} 
+        <form id="subject-time-form" method="POST" action="/submit">
+            <label for="subject">Choose a Subject:</label>
+            <select id="subject" name="subject" onchange="updateTimes()">
+                <option value="" disabled selected>Select Subject</option>
+                {% for subject in subjects.keys() %}
+                    <option value="{{ subject }}">{{ subject }}</option>
+                {% endfor %}
             </select>
-            
-            <label for="time-select">Choose a Time:</label>
-            <select id="time-select">
-                <option value="MWF 09:00am-10:00am">MWF 09:00am-10:00am</option>
-                <option value="TTh 11:00am-12:30pm">TTh 11:00am-12:30pm</option>
-                <option value="MWF 02:00pm-03:00pm">MWF 02:00pm-03:00pm</option>
-            </select>
-            
-            <button type="button" id="submit-btn">Submit</button>
-        </form>
         
+            <label for="time">Available Times:</label>
+            <select id="time" name="time">
+                <option value="" disabled selected>Select Time</option>
+            </select>
+            <input type="hidden" id="subjectHidden" name="subject" value="">
+            <input type="hidden" id="crn" name="crn" value="">
+            <input type="hidden" id="days" name="days" value="">
+            <input type="hidden" id="timeSel" name="timeSel" value="">
+        
+            <button type="submit" id="submit-btn">Submit</button>
+        </form>
+
+
+    <button onclick="Show()">Randomize</button>
+
+    <div id="counterSection" style="display:none; margin-top: 20px;">
+        <p>Choose the number of classes you would like to take (1-6):</p>
+        <button onclick="decrement()">-</button>
+        <span id="classCount">1</span>
+        <button onclick="increment()">+</button>
+
+        <br><br>
+
+        <button onclick="submitClassCount()">Submit</button>
+    </div>
         <table id="schedule-table">
             <thead>
                 <tr>
@@ -59,5 +177,17 @@
     </main>
     
     <script src="{{ url_for('static', filename='js/chatJava.js') }}"></script>
+    <script>
+        // This function can be triggered when you submit the form
+        document.getElementById("submit-btn").addEventListener("click", function(event) {
+            var { subject: selectedSubject, crn:selectedCRN, days: selectedDays, timeSel: selectedTime } = getSelected();
+
+            document.getElementById("subjectHidden").value = selectedSubject;
+            document.getElementById("crn").value = selectedCRN;
+            document.getElementById("days").value = selectedDays; 
+            document.getElementById("timeSel").value = selectedTime;  
+
+        });
+    </script>
 </body>
 </html>

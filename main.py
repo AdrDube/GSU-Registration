@@ -1,9 +1,9 @@
-from flask import request, render_template, Flask, url_for, redirect, session, flash
+from flask import request, render_template, Flask, url_for, redirect, session, flash, jsonify
 from validity import valid_web, valid_works
 from courses import get_degree_info
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
-from timetables import retrieve_classes_website, clash, convert_time
+from timetables import retrieve_classes_website, clash, convert_time, add_classes, add_crns
 from functools import wraps
 from dotenv import dotenv_values
 from mySQL import taken_info, get_remaining
@@ -133,8 +133,9 @@ def dashboard():
                 return url_for(homepage)
             else:
                 session["remaining"] = get_remaining(degree_info["classes_taken"])  
- 
             session["available_courses"] = retrieve_classes_website(session["remaining"])
+            session["schedule"]={}
+            
         return render_template("dashboard.html", subjects = session["available_courses"])
     
     else:
@@ -167,38 +168,56 @@ def submit():
     days = request.form.get('days')
     time = request.form.get('timeSel')
     converted_time= convert_time(time)   
-    
-    print(subject, crn, days, time, converted_time)
-    # check if schedule created
-    if not session.get("schedule"):
-        session["schedule"] = { crn:{"subject": subject, "days":days, "time": time, "converted_time":converted_time} }
-        flash("Course added successfully")
+
+    #check if max amount of classes reached
+    if len(session["schedule"]) == 7:
+        flash("Maximum amout of classes(7) added")
         return redirect(url_for('dashboard'))
     
+    #check for clash
     clashes = clash(session["schedule"], crn, subject, days, converted_time)
     if not clashes[0] :
         session["schedule"][crn] = {"subject": subject, "days":days, "time": time, "converted_time":converted_time}
         flash(clashes[1], "success")  
         return redirect(url_for('dashboard'))
     
-    flash(clashes[1], "error")
+    flash(clashes[1])
     return redirect(url_for('dashboard'))
 
 
 @login_required 
 @app.route('/added')
 def added():
-    print( session["schedule"] )
-    return redirect(url_for('dashboard'))
+    #shows the current schedule on the webpage
+    return jsonify(session["schedule"])
 
 
 @app.route('/randomizer', methods=['POST'])
 def submit_class_count():
-    class_count = request.form.get('classCount')
-    print(f"Classes selected: {class_count}")
+    class_count = int(request.form.get('classCount'))
+    classes_added = add_classes(session["available_courses"], session["schedule"], class_count)
+    flash(f"{classes_added} classes added")
+    if class_count !=classes_added:
+        flash(f"Only a maximum of 7 classses may be added")
     return redirect(url_for("dashboard"))
 
+@app.route('/delete')
+def delete_course():
+    rmv_crn = request.form.get('rmv crn')
+    if session:
+        if session.get("schedule") and session["schedule"].get(rmv_crn):
+            session["schedule"].pop(rmv_crn)
+            return redirect(url_for('dashboard'))
 
+@app.route('/final_submission', methods=["POST"])
+def final_submission():
+    chosen_courses=[]
+    for crn in session["schedule"]:
+        chosen_courses.append(crn)
+    add_crns(cipher.decrypt(current_user.g_num).decode(), cipher.decrypt(current_user.web_pin).decode(), chosen_courses)
+    flash("Successful")
+    return redirect(url_for('dashboard'))
+        
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

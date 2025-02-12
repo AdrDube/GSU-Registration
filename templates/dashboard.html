@@ -62,6 +62,7 @@
     // Function to update the class count
     function updateCount() {
         document.getElementById("classCount").textContent = classCount;
+        document.getElementById("classCountInput").value = classCount;
     }
 
     // Increment function
@@ -84,17 +85,6 @@
     function Show() {
         document.getElementById("counterSection").style.display = 'block';
         
-    }
-
-    // Function to submit the number of classes via POST
-    function submitClassCount() {
-        const formData = new FormData();
-        formData.append("classCount", classCount);
-
-        fetch('/randomizer', {
-        method: 'POST',
-        body: formData
-    })
     }
 </script>
 
@@ -155,7 +145,11 @@
 
         <br><br>
 
-        <button onclick="submitClassCount()">Submit</button>
+        <form action="{{ url_for('submit_class_count') }}" method="POST">
+            <input type="hidden" name="classCount" id="classCountInput" value="1" required>
+            <button type="submit">Submit</button>
+        </form>
+        
     </div>
         <table id="schedule-table">
             <thead>
@@ -174,6 +168,10 @@
                 <!-- Table rows will be dynamically generated -->
             </tbody>
         </table>
+        
+        <form action="{{ url_for('final_submission') }}" method="POST">
+            <button type="submit">Submit Final Schedule</button>
+        </form>
     </main>
     
     <script src="{{ url_for('static', filename='js/chatJava.js') }}"></script>

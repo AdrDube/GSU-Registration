@@ -1,25 +1,28 @@
-from flask import request, render_template, Flask, url_for, redirect, session
+from flask import request, render_template, Flask, url_for, redirect, session, flash
 from validity import valid_web, valid_works
-from courses import get_transcripts
+from courses import get_degree_info
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
+from timetables import retrieve_classes_website, clash, convert_time
+from functools import wraps
 from dotenv import dotenv_values
 from mySQL import taken_info, get_remaining
 from cryptography.fernet import Fernet
+import sys
+app = Flask("My app")
+secrets = dotenv_values(".env")
 
-app=Flask("My app")
-secrets=dotenv_values(".env")
+cipher = Fernet(secrets["cipher"].encode('utf-8'))
 
-cipher = Fernet(secrets["cipher"].encode())
-
-host= secrets["mysql_host"]
-user= secrets["mysql_user"]
-password=secrets["mysql_password"]
-database=secrets["mysql_database"]
+host = secrets["mysql_host"]
+user = secrets["mysql_user"]
+password = secrets["mysql_password"]
+database = secrets["mysql_database"]
 port = secrets["port"]
+
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}'
 
-Flask.secret_key = secrets["secret_key"]
+app.secret_key = secrets["secret_key"]
 
 login=LoginManager()
 login.__init__(app)
@@ -33,10 +36,25 @@ class Student(UserMixin, db.Model):
     g_num= db.Column(db.String(100))
     web_pin= db.Column(db.String(100))
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session:
+            flash('Please log in to access this page.', 'warning')
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @login.user_loader
-def load_user(user_id):
-    return Student.query.get(int(user_id))
+def load_user(user):
+    return Student.query.get(user)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('Logged out successfully!')
+    return redirect(url_for('login'))
+
 
 @app.route("/", methods=["GET","POST"])
 def login():
@@ -47,138 +65,140 @@ def login():
         user = Student.query.filter_by(username=username).first()
         if user and password == cipher.decrypt(user.password).decode():
             login_user(user)
-            return redirect(url_for("homepage"))
-        return redirect(url_for("invalid_login"))
-    return render_template("login.html", login_text="Login")
+            flash("Successful. Logging in...", "success") 
+            return render_template('index.html',login=True, redirect_target=url_for("dashboard"))
+        flash("Invalid login details. Try again", "error")
 
-
-@app.route("/invalid_login", methods=["GET", "POST"])
-def invalid_login():
-    if request.method=="POST":
-        data = request.form
-        username=data["username"]
-        password=data["password"]
-        user = Student.query.filter_by(username=username).first()
-        if user and password == cipher.decrypt(user.password).decode():
-            login_user(user)
-            return redirect(url_for("homepage"))
-    return render_template("login.html", login_text="Invalid Login, please try again")
-
+    return render_template("index.html", login=True)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         data = request.form
         reg_username = data["reg_name"]
-        reg_password = data["password"]
-
-        if Student.query.filter_by(username=reg_username).first():
-            return redirect(url_for("in_dbs"))
-        
-        if valid_works(reg_username, reg_password):
-            password = cipher.encrypt(reg_password.encode())
-            new_user = Student(username=reg_username, password = password) 
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user)
-            return redirect(url_for("web"))
-        return redirect(url_for("invalid_works"))
-    return render_template("works.html")
-
-
-@app.route("/invalid_works", methods=["GET","POST"])
-def invalid_works():
-    if request.method == "POST":
-        data = request.form
-        reg_username= data["reg_name"]
-        reg_password= data["password"]
-        if Student.query.filter_by(username=reg_username).first():
-            return redirect(url_for("in_dbs"))
-        if valid_works(reg_username, reg_password):
-            password = cipher.encrypt(reg_password.encode())
-            new_user = Student(username=reg_username, password = password) 
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(user)
-            login_user(new_user)
-            return redirect(url_for("web"))
-    return render_template("invalid_works.html")
-
-
-@app.route("/web", methods=["GET", "POST"])
-@login_required
-def web():
-    if request.method == "POST":
-        data = request.form
+        reg_password = data["reg_password"]
         g_num = data["g_num"]
         web_pin = data["web_pin"]
-        if valid_web(g_num, web_pin):
-            g_num = cipher.encrypt(g_num.encode())
-            web_pin = cipher.encrypt(web_pin.encode())
-            db.session.query(Student).filter_by(username=session['username']).update(
+
+        if Student.query.filter_by(username=reg_username).first() or Student.query.filter_by(g_num=g_num).first():
+            flash("Username / G-Num account already in the Database. Try again",  "error")
+
+        elif valid_works(reg_username, reg_password):
+            if valid_web(g_num, web_pin):
+                password = cipher.encrypt(reg_password.encode())
+                new_user = Student(username=reg_username, password=password)
+                db.session.add(new_user)
+                login_user(new_user)
+                g_num = cipher.encrypt(g_num.encode())
+                web_pin = cipher.encrypt(web_pin.encode())
+                db.session.query(Student).filter_by(username=current_user.username).update(
                         {'g_num': g_num, 'web_pin': web_pin}
                         )
-            db.session.commit()       
-            return redirect(url_for("homepage"))
-        return render_template("invalid_web.html")
-    return render_template("web.html")
-
-@app.route("/invalid_web", methods=["GET", "POST"])
-@login_required
-def invalid_web():
-    if request.method == "POST":
-        data = request.form
-        g_num = data["g_num"]
-        web_pin = data["web_pin"]
-        if valid_web(g_num, web_pin):
-            g_num = cipher.encrypt(g_num.encode())
-            web_pin = cipher.encrypt(web_pin.encode())
-            db.session.query(Student).filter_by(username=session['username']).update(
-                        {'g_num': g_num, 'web_pin': web_pin}
-                        )
-            db.session.commit()       
-            return redirect(url_for("homepage"))
-    return render_template("/invalid_web.html")
-
-@app.route("/contained", methods=["GET", "POST"])
-def in_dbs():
-    if request.method == "POST":
-        data = request.form
-        username = data["username"]
-        password = data["password"]
-        user = Student.query.filter_by(username=username).first()
-        if user and password == cipher.decrypt(user.password).decode():
-            db.session.add(user)
-            login_user(user)
-            return redirect(url_for("homepage"))
-        return redirect(url_for("invalid_login"))
-    return render_template("login.html", login_text="User and password already in database. Login")
-
+                db.session.commit()
+                return redirect(url_for("dashboard"))
+            flash("Banner web login details are not accurate, try again",  "error")
+        else:
+            flash("Degree Works is inaccurate, try again",  "error")
+ 
+    return render_template("index.html", login=False)
 
 @app.route("/homepage", methods=["GET", "POST"])
 @login_required
 def homepage():
-    if request.method=="POST":
-        return redirect(url_for("choice"))
-    subjects=get_transcripts(current_user.username, cipher.decrypt(current_user.password).decode())
-    subject_info = taken_info(subjects)
-    session["remaining"] = get_remaining(subjects)
-    session["requested"]=[]
-    session["index"]=0
-    return render_template("reg_page.html", subject_info=subject_info)
+    if current_user:
+        if request.method == "POST":
+            return redirect(url_for("choice"))
 
+        degree_info = get_degree_info(current_user.username, cipher.decrypt(current_user.password).decode())
+        if degree_info.get("error"):
+            flash(degree_info["error"], "error")
+            return url_for(homepage)
+        else:
+            session["remaining"] = get_remaining(degree_info["classes_taken"])
+            session["requested"]=[]
+            session["index"]=0
+            subject_info = taken_info(degree_info["classes_taken"])
+            return render_template("reg_page.html", subject_info=subject_info)
+    else:
+        return redirect(url_for('logout'))   
+    
+@app.route("/dashboard", methods=["GET", "POST"])
+@login_required
+def dashboard():
+    if session:
+        if not session.get("remaining", None):
+            degree_info = get_degree_info(current_user.username, cipher.decrypt(current_user.password).decode())
+            if degree_info.get("error"):
+                flash(degree_info["error"], "error")
+                return url_for(homepage)
+            else:
+                session["remaining"] = get_remaining(degree_info["classes_taken"])  
+ 
+            session["available_courses"] = retrieve_classes_website(session["remaining"])
+        return render_template("dashboard.html", subjects = session["available_courses"])
+    
+    else:
+        return redirect(url_for('logout'))
+
+
+    
+    
+    
 @app.route("/choice", methods=["GET", "POST"])
 @login_required
 def choice():
-    if request.method == "POST":
-        subject = request.form["selectedValue"]
-        session["index"]+=1
-        if session["index"]>7 or subject=='Next':
-            return f"{session['requested']}"
-        session["requested"].append(subject)
-        session["remaining"].remove(subject)
-        session.modified = True 
-    return render_template("a.html", remaining=session["remaining"])
+    if session:
+        if request.method == "POST":
+            subject = request.form["selectedValue"]
+            session["index"] += 1
+            if session["index"] > 7 or subject == 'Next':
+                return f"{session['requested']}"
+            session["requested"].append(subject)
+            session["remaining"].remove(subject)
+            session.modified = True
+        return render_template("a.html", remaining=session["remaining"])
+    else:
+        return redirect(url_for('logout'))
+    
+@app.route('/submit', methods=['POST'])
+def submit():
+    subject = request.form.get('subject')
+    crn = request.form.get('crn')
+    days = request.form.get('days')
+    time = request.form.get('timeSel')
+    converted_time= convert_time(time)   
+    
+    print(subject, crn, days, time, converted_time)
+    # check if schedule created
+    if not session.get("schedule"):
+        session["schedule"] = { crn:{"subject": subject, "days":days, "time": time, "converted_time":converted_time} }
+        flash("Course added successfully")
+        return redirect(url_for('dashboard'))
+    
+    clashes = clash(session["schedule"], crn, subject, days, converted_time)
+    if not clashes[0] :
+        session["schedule"][crn] = {"subject": subject, "days":days, "time": time, "converted_time":converted_time}
+        flash(clashes[1], "success")  
+        return redirect(url_for('dashboard'))
+    
+    flash(clashes[1], "error")
+    return redirect(url_for('dashboard'))
 
-if __name__=="__main__":
+
+@login_required 
+@app.route('/added')
+def added():
+    print( session["schedule"] )
+    return redirect(url_for('dashboard'))
+
+
+@app.route('/randomizer', methods=['POST'])
+def submit_class_count():
+    class_count = request.form.get('classCount')
+    print(f"Classes selected: {class_count}")
+    return redirect(url_for("dashboard"))
+
+
+
+if __name__ == "__main__":
     app.run(debug=True, port=5001)

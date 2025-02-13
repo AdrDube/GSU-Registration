@@ -1,14 +1,23 @@
 import mysql.connector
 from dotenv import dotenv_values
 import os
+
 env = os.path.join(os.path.dirname(__file__), '..', '.env')
 secrets = dotenv_values(env)
 
-dbs = mysql.connector.connect(host=secrets["mysql_host"], 
-                              user=secrets["mysql_user"],
-                              password=secrets["mysql_password"],
-                              database=secrets["mysql_database"])
-cursor = dbs.cursor()
+try:
+    dbs = mysql.connector.connect(
+        host=secrets["mysql_host"],
+        user=secrets["mysql_user"],
+        password=secrets["mysql_password"],
+        database=secrets["mysql_database"],
+        port=secrets["port"]
+    )
+    cursor=dbs.cursor()
+    print("Connection successful")
+except mysql.connector.Error as err:
+    print(f"Error: {err}")
+
 
 '''
 def add_works_info(reg_username, reg_password):
@@ -36,4 +45,4 @@ def val_in_dbs(reg_username, reg_password):
     if val:
         return True
     return False
-    
+ 

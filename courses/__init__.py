@@ -1,1 +1,1 @@
-from .retrieve import get_transcripts
+from .retrieve import get_transcripts, get_degree_info

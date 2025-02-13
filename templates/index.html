@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Regstration/Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
+
+</head>
+<body>
+
+
+
+<div class="wrapper">
+    
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    </div>
+  {% endif %}
+  {% endwith %} 
+  <div id="login-form" class="login-box {% if login %}active{% endif %}">
+    <form method="POST">
+      <h2>Login</h2>
+
+      <div class="input-box">
+        <span class="icon">
+          <ion-icon name="mail"></ion-icon>
+        </span>
+        <input type="text" id="username" name="username" required>
+        <label>Username</label>
+      </div>
+
+      <div class="input-box">
+        <span class="icon">
+          <ion-icon name="lock-closed"></ion-icon>
+        </span>
+        <input type="password" name="password"required>
+        <label>Password</label>
+      </div>
+
+      <div class="remember-forgot">
+        <label><input type="checkbox"> Remember me</label>
+        <a href="#">Forgot Password?</a>
+      </div>
+
+      <button type="submit">Login</button>
+
+      <div class="register-link">
+        <p>Don't have an account? <a href="{{ url_for('register') }}" onclick="toggleForm(event, this)">Register</a></p>
+      </div>
+    </form>
+
+  </div>
+
+  <div id="signup-form" class="signup-box {% if not login %}active{% endif %}">
+    <form method="POST">
+      <h2>Signup</h2>
+
+      <div class="input-box"> 
+        <span class="icon"><ion-icon name="person"></ion-icon></span>
+        <input type="text"  name="reg_name"required>
+        <label>Username</label>
+      </div>
+
+      <div class="input-box">
+        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+        <input type="password"  name="reg_password" required>
+        <label>Password</label>
+      </div>
+
+      <div class="input-box">
+        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+        <input type="password" name="g_num"required>
+        <label>G-Number</label>
+      </div>
+
+      <div class="input-box">
+        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+        <input type="password" name="web_pin" required>
+        <label>Banner Web Pin</label>
+      </div>
+
+      <button type="submit">Sign Up</button>
+
+      <div class="register-link">
+        <p>Don't have an account? <a href="{{ url_for('login') }}" onclick="toggleForm(event, this)">Login</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- partial -->
+<script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+<script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
+<script>
+
+function toggleForm(event, link) {
+    event.preventDefault(); // Prevent immediate navigation
+
+    document.getElementById("login-form").classList.toggle("active");
+    document.getElementById("signup-form").classList.toggle("active");
+
+    // Delay navigation slightly (if needed)
+    setTimeout(() => {
+        window.location.href = link.href;
+    }, 3000); 
+}
+</script>
+</script>
+<script>
+  function redirectIfTarget() {
+      const redirectTarget = "{{ redirect_target }}";
+      if (redirectTarget) {
+          setTimeout(() => {
+              window.location.href = redirectTarget;
+          }, 2000); // 2 seconds
+      }
+  }
+
+  // Call the function when the page loads
+  window.onload = redirectIfTarget;
+</script>
+</body>
+</html>

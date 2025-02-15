@@ -127,16 +127,16 @@ def homepage():
 def dashboard():
     if session:
         if not session.get("remaining", None):
-            degree_info = get_degree_info(current_user.username, cipher.decrypt(current_user.password).decode())
-            if degree_info.get("error"):
-                flash(degree_info["error"], "error")
+            session["degree_info"] = get_degree_info(current_user.username, cipher.decrypt(current_user.password).decode())
+            if session["degree_info"].get("error"):
+                flash(session["degree_info"]["error"], "error")
                 return url_for(homepage)
             else:
-                session["remaining"] = get_remaining(degree_info["classes_taken"])  
+                session["remaining"] = get_remaining(session["degree_info"]["classes_taken"])  
             session["available_courses"] = retrieve_classes_website(session["remaining"])
             session["schedule"]={}
             
-        return render_template("dashboard.html", subjects = session["available_courses"])
+        return render_template("dashboard.html", subjects = session["available_courses"], schedule= session["schedule"])
     
     else:
         return redirect(url_for('logout'))
@@ -163,6 +163,7 @@ def choice():
     
 @app.route('/submit', methods=['POST'])
 def submit():
+    print(session["degree_info"])
     subject = request.form.get('subject')
     crn = request.form.get('crn')
     days = request.form.get('days')

@@ -13,9 +13,9 @@ def get_transcripts(name, password):
     driver = webdriver.Chrome()
     driver.get("https://dw-prod.ec.gram.edu/responsiveDashboard/worksheets/WEB31")
 
-    driver.find_element(By.XPATH, "/html/body/div/div/div/div/form/div[1]/input[1]").send_keys(name)
-    driver.find_element(By.XPATH, "/html/body/div/div/div/div/form/div[2]/input").send_keys(password)
-    driver.find_element(By.XPATH, "/html/body/div/div/div/div/form/div[3]/div/button").click()
+    driver.find_element(By.ID, "username").send_keys(name)
+    driver.find_element(By.ID, "password").send_keys(password)
+    driver.find_element(By.XPATH, "/html/body/div/div/div/div/form/div[2]/div[3]/div/button").click()
     menu = False
     extracted=False
 
@@ -59,9 +59,10 @@ def get_degree_info(name, password):
     driver = webdriver.Chrome()
     driver.get("https://dw-prod.ec.gram.edu/responsiveDashboard/worksheets/WEB31")
 
-    driver.find_element(By.XPATH, "/html/body/div/div/div/div/form/div[1]/input[1]").send_keys(name)
-    driver.find_element(By.XPATH, "/html/body/div/div/div/div/form/div[2]/input").send_keys(password)
-    driver.find_element(By.XPATH, "/html/body/div/div/div/div/form/div[3]/div/button").click()
+    
+    driver.find_element(By.ID, "usernameUserInput").send_keys(name)
+    driver.find_element(By.ID, "password").send_keys(password)
+    driver.find_element(By.XPATH, "/html/body/div/div/div/div/form/div[2]/div[3]/div/button").click()
     menu = False
     extracted=False
     profile={}

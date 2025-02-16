@@ -1,8 +1,10 @@
 import mysql.connector
 import os
 from dotenv import dotenv_values
+from .available_classes import convert_time
 env = os.path.join(os.path.dirname(__file__), '..', '.env')
 secrets = dotenv_values(env)
+from random import shuffle
 
 dbs=mysql.connector.connect(host=secrets["mysql_host"],
                             port=secrets["port"],   
@@ -60,12 +62,53 @@ def time_conflict(conv_time,conv_sched_time):
     return not (end1 <= start2 or end2 <= start1)          
 
 def clash(schedule, crn, subject, days, converted_time):
+    online=0
     if crn in schedule:
         return (True, "CRN already in your schedule")
+    if days=="ONLINE":
+        online+=1
+    
     for course in schedule.values():
         if course["subject"]==subject:
             return (True, "Course already in your schedule")
-        print(course["converted_time"])
+        
+        if course["days"]=="ONLINE":
+            online+=1
+        
+        if online > 2:
+            return (True, f"Too many online courses")
+        
         if days_conflict(course["days"], days) and time_conflict(converted_time, course["converted_time"]):
             return (True, f"Conflit with {course['subject']}")
+        
+      
+        
     return (False, "Course successfully added")
+
+
+def add_classes(available_courses, schedule, class_count):
+    added = 0
+    print(class_count)
+    subjects = list(available_courses.keys())
+    
+    shuffle(subjects)
+    
+    for subj in subjects:
+        if len(schedule)==7 or added == class_count:
+            return added
+        print(subj)
+        shuffle(available_courses[subj])
+        
+        for period in available_courses[subj]:
+            crn, days, time = period
+            crn=str(crn)
+            converted_time = convert_time(time)
+            clashes = clash(schedule, crn, subj, days, converted_time)
+            if not clashes[0]:
+                schedule[crn]= {"subject": subj, "days":days, "time":time, "converted_time" : converted_time} 
+                added+=1
+                break
+
+              
+                
+        

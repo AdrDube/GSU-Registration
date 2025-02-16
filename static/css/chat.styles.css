@@ -1,59 +1,174 @@
-body {
-    font-family: Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+* {
     margin: 0;
     padding: 0;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0px;
+    padding: 0px;
     text-align: center;
+    display: block;    
 }
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #333;
+    background: rgb(3, 157, 246);
     color: white;
     padding: 10px 20px;
+}
+.container-fluid {
+    display:flex;
+    flex-direction: column;
+    padding: 0px;
+    margin:0px;
+}
+
+#schedule-form {
+    display: block;
+}
+
+.schedule-table table {
+    max-width: 600px; 
+    width: 90%;  
+    margin: 0 auto; 
+}
+
+.select-class {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
+.add-class-btn {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+
+.profile-container {
+    display: flex;
+    justify-content: left;
+    padding: 20px;     
+
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+
+.profile-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    margin-right: 3.5rem;
+}
+
+.profile-cards p {
+    text-align: left;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+
 }
 
 .dropdown {
     position: relative;
     display: inline-block;
+    padding-right: 3.5rem;
 }
 
-.dropbtn {
-    background: #444;
+.menu-btn {
+    background: #666;
     color: white;
     border: none;
-    padding: 10px;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     cursor: pointer;
+    border-radius: 5px;
 }
 
-.dropdown-content {
+.menu-btn:hover {
+    background-color: #777;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.menu-list {
     display: none;
     position: absolute;
     background: white;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    min-width: 100px;
+    min-width: 100%;
+    transition: opacity 0.5s ease-in-out;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    
 }
 
-.dropdown-content a {
+
+.menu-list a {
     display: block;
     padding: 10px;
     text-decoration: none;
     color: black;
+    
 }
 
-.dropdown:hover .dropdown-content {
+.menu-list a:hover {
+    background-color: aliceblue;
+}
+
+
+.menu-list li {
+    border-bottom: 1px solid;
+    padding: 10px;
+    
+}
+.menu-list li:hover {
+    border-bottom: 1px solid;
+    padding: 10px;
+    background-color: aliceblue;
+}
+
+
+
+.menu-list.show {
     display: block;
 }
+
 
 form {
     margin: 20px;
 }
 
-button {
-    margin-top: 10px;
-    padding: 10px;
+#submit-btn {  
+    padding-right:  1.5rem;
+    padding-left: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 5px;  
+}
+
+#submit-btn:hover {
+    background-color: #CCC;
+    transition: transform 0.3s ease;
 }
 
 table {
@@ -72,3 +187,8 @@ th {
     background: #444;
     color: white;
 }
+
+/* css for the profile page*/
+
+
+

@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     
         const timeMap = {
-            "08:00am": 0, "09:00am": 1, "10:00am": 2, "11:00am": 3, "12:00pm": 4,
+            "08:00": 0, "09:00am": 1, "10:00am": 2, "11:00am": 3, "12:00pm": 4,
             "01:00pm": 5, "02:00pm": 6, "03:00pm": 7, "04:00pm": 8, "05:00pm": 9, "06:00pm": 10
         };
 

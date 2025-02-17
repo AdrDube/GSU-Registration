@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Scheduler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/calendar_schedule_table.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.styles.css') }}">
-    <!--<link rel="stylesheet" href="../static/css/chat.styles.css">-->
+
+<!--updateTimes-->
 <script>
         function updateTimes() {
             var subject = document.getElementById("subject").value;
@@ -55,6 +57,7 @@
 
         }
 </script>
+<!--Randomize Settings-->
 <script>
     let classCount = 1; // Default starting count
     const maxClasses = 6; // Maximum number of classes
@@ -88,20 +91,79 @@
     }
 </script>
 
+<!--Timetable-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const scheduleTable = document.getElementById("scheduleTable");
+        if (!scheduleTable) return; // Stop execution if the table is not found
+
+        const schedule = JSON.parse('{{ schedule | tojson | safe }}');
+        const dayMap = { "M": 1, "T": 2, "W": 3, "R": 4, "F": 5 };
+        const timeMap = {
+            "08": 1, "09": 2, "10": 3, "11": 4, "12": 5,
+            "13": 6, "14": 7, "15": 8, "16": 9, "17": 10, "18": 11
+        };
+
+        function createTimeTable(schedule) {
+            for (const [id, details] of Object.entries(schedule)) {
+                const startTime = details.converted_time[0];
+                const time = details.time;
+                const subject = details.subject;
+                const days = details.days;
+                if (time === "TBA") {
+    
+                    const li = document.createElement("li");
+                    li.textContent = `${subject} (${id}) - Days: ${days}`;
+                    onlineClassesList.appendChild(li);
+            } else {
+                // Handle regular classes
+                const hours = startTime.split(":")[0];
+                let row = timeMap[hours];
+                if (row === undefined) continue; // Skip if time is not found
+
+                days.split("").forEach(day => {
+                    let col = dayMap[day];
+                    if (col === undefined) return; // Skip if day is not found
+
+                    if (!scheduleTable.rows[row] || !scheduleTable.rows[row].cells[col]) return; // Prevent null errors
+
+                    let cell = scheduleTable.rows[row].cells[col];
+
+                    if (cell.innerHTML.trim() !== "") {
+                        alert(`Conflict detected for ${id}`);
+                    } else {
+                        cell.innerHTML = `<div class="class-entry">
+                            ${id} <br>  
+                            ${subject} <br>
+                            ${time}
+                        </div>`;
+                    }
+                });
+            }
+        }
+        onlineClassesList.parentElement.style.display = onlineClassesList.children.length > 0 ? "block" : "none";
+        }
+
+        createTimeTable(schedule);
+    });
+</script>
 
 </head>
 <body>
     <header>
-        <h1>Class Scheduler</h1>
-        <div class="dropdown">
-            <button class="dropbtn">Menu</button>
-            <div class="dropdown-content">
-                <a href="#">Dashboard</a>
-                <a href="#">Profile</a>
-                <a href="#">Logout</a>
-            </div>
+        <div>
+            <h1>Class Scheduler</h1>
         </div>
+        <div class="dropdown">
+            <button class="menu-btn">Menu</button>
+            <ul class="menu-list">
+                <li><a href="chatmain.html">Dashboard</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#">Logout</a></li>                
+            </ul>
+        </div>    
     </header>
+    
     
     <main>
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -151,30 +213,99 @@
         </form>
         
     </div>
-        <table id="schedule-table">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="schedule-table">
+            <table class="table" id="scheduleTable" bg-white">
             <thead>
                 <tr>
-                    <th>Time</th>
-                    <th>Sunday</th>
-                    <th>Monday</th>
-                    <th>Tuesday</th>
-                    <th>Wednesday</th>
-                    <th>Thursday</th>
-                    <th>Friday</th>
-                    <th>Saturday</th>
+                <th></th>
+                <th class="mon">Monday</th>
+                <th class="tues">Tuesday</th>
+                <th class="wed">Wednesday</th>
+                <th class="thurs">Thursday</th>
+                <th class="fri">Friday</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Table rows will be dynamically generated -->
+                <tr>
+                    <td class="day">8 am</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">9 am</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">10 am</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">11 am</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">12 pm</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">1 pm</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">2 pm</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">3 pm</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">4 pm</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">5 pm</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td class="day">6 pm</td>
+                    <td></td>   <td></td>  <td></td>  <td></td> <td></td>
+                </tr>
             </tbody>
-        </table>
+            </table>
+        </div>
+        </div>
+    </div>
+
+    <div class="online-classes">
+        <h2>Online Classes</h2>
+        <ul id="onlineClassesList"></ul>
+    </div>
+
+    <form id="remove-form" action="/delete" method="POST">
+        <div>
+            <label for="remove-select">Select Class to Remove:</label>
+            <select id="remove-select" name="crn" required>
+                <option value="" disabled selected>Select Subject</option>
+                {% for crn, details in schedule.items() %}
+                    <option value="{{ crn }}">{{ details.subject }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <button type="submit" id="remove-btn">Remove Class</button>
+        </div>
+    </form>
+    
+    
         
-        <form action="{{ url_for('final_submission') }}" method="POST">
+    <form action="{{ url_for('final_submission') }}" method="POST">
             <button type="submit">Submit Final Schedule</button>
-        </form>
+    </form>
     </main>
     
-    <script src="{{ url_for('static', filename='js/chatJava.js') }}"></script>
+    
     <script>
         // This function can be triggered when you submit the form
         document.getElementById("submit-btn").addEventListener("click", function(event) {
@@ -187,5 +318,6 @@
 
         });
     </script>
+
 </body>
 </html>

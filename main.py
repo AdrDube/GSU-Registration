@@ -202,13 +202,18 @@ def submit_class_count():
         flash(f"Only a maximum of 7 classses may be added")
     return redirect(url_for("dashboard"))
 
-@app.route('/delete')
+@app.route('/delete', methods=['POST'])
 def delete_course():
-    rmv_crn = request.form.get('rmv crn')
+    crn = request.form.get('crn')
+    print(crn)
     if session:
-        if session.get("schedule") and session["schedule"].get(rmv_crn):
-            session["schedule"].pop(rmv_crn)
+        if session.get("schedule") and session["schedule"].get(crn):
+            session["schedule"].pop(crn)
+            session.modified = True
+            flash("Subject successfully removed")
             return redirect(url_for('dashboard'))
+        flash("Error in deleting the requested CRN, try again")
+        return redirect(url_for('dashboard'))
 
 @app.route('/final_submission', methods=["POST"])
 def final_submission():

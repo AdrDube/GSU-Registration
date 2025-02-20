@@ -142,8 +142,10 @@ def dashboard():
         return redirect(url_for('logout'))
 
 
-    
-    
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')   
+
     
 @app.route("/choice", methods=["GET", "POST"])
 @login_required

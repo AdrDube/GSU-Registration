@@ -15,9 +15,9 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgb(3, 157, 246);
+    background: #D48F00;
     color: white;
-    padding: 10px 20px;
+    padding: 30px;
 }
 .container-fluid {
     display:flex;
@@ -42,10 +42,17 @@ header {
     padding: 10px;
 }
 
-.add-class-btn {
+.add-class-btn-container {
     display: flex;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
+}
+
+.class-selection-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 20px;
 }
 
 
@@ -153,17 +160,15 @@ form {
     margin: 20px;
 }
 
-#submit-btn {  
+button {  
     padding-right:  1.5rem;
     padding-left: 1.5rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 10px;
+    cursor: pointer;    
     border: none;
-    border-radius: 5px;  
+    border-radius: 10px;  
 }
 
 #submit-btn:hover {
@@ -171,21 +176,49 @@ form {
     transition: transform 0.3s ease;
 }
 
+
+#randomize-btn {
+    margin-top: 0px;
+    margin-bottom: 15px;
+}
+
+#final-schedule-btn {
+    margin-top: 0px;
+}
+
+#remove-btn {
+    margin-top: 25px;
+}
+
 table {
-    width: 80%;
+    
     margin: 20px auto;
     border-collapse: collapse;
+    font-size: 15px;
+    width: 20%;
+       
+}
+
+.row {
+    transform: scale(0.85)
 }
 
 th, td {
     border: 1px solid black;
     padding: 10px;
     text-align: center;
+    width: 20%;
+    
 }
 
 th {
     background: #444;
     color: white;
+}
+
+.end {
+    padding: 20px;
+
 }
 
 /* css for the profile page*/

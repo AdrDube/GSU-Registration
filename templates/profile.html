@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Profile</title>
-    <link rel="stylesheet" href="../static/css/profile.styles.css">
-    <link rel="stylesheet" href="../static/css/chat.styles.css">
-    <!--<link rel="stylesheet" href="{{ url_for('static', filename='../static/css/profile.styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='../static/css/chat.styles.css') }}">-->
+    <!--<link rel="stylesheet" href="../static/css/profile.styles.css">
+    <link rel="stylesheet" href="../static/css/chat.styles.css">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='../static/css/profile.styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../static/css/chat.styles.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -19,9 +19,9 @@
             <div class="dropdown">
                 <button class="menu-btn">Menu</button>
                 <ul class="menu-list">
-                    <li><a href="chatmain.html">Dashboard</a></li>
-                    <li><a href="profile.html">Profile</a></li>
-                    <li><a href="#">Logout</a></li>                
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>                
                 </ul>
             </div>
         </header>
@@ -33,14 +33,22 @@
         <div class="profile-container">            
             <div class="profile-cards">
                 <div class="details">
-                    <p><strong>Full Name:</strong> John Doe</p>
-                    <p><strong>Classification:</strong> Junior</p>
+                    <div class="paragraph-container">
+                        <p><strong>Full Name:</strong> John Doe</p>
+                    </div>
+                    <div class="paragraph-container">
+                        <p><strong>Classification:</strong> Junior</p>
+                    </div>
                 </div>
             </div>
             <div class="profile-cards">
-                <div class="details">                
-                    <p><strong>Student Number:</strong> 12345678</p>
-                    <p><strong>Semester:</strong> Spring 2025</p>
+                <div class="details">
+                    <div class="paragraph-container">                
+                        <p><strong>Student Number:</strong> 12345678</p>
+                    </div>
+                    <div class="paragraph-container">
+                        <p><strong>Semester:</strong> Spring 2025</p>
+                    </div>
                 </div>
             </div>            
         </div>

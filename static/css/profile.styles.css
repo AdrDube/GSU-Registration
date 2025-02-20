@@ -1,6 +1,9 @@
 /* Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
+html, body {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    width: 100%; 
+}
 
 .profile-container {
     display: flex;
@@ -29,9 +32,13 @@
 .profile-info p {
     font-size: 16px;
     color: #555;
-    margin: 8px 0;
+    margin: 15px;
 }
 
 .profile-info p strong {
     color: #222;
+}
+
+.paragraph-container {
+    padding: 20px;
 }

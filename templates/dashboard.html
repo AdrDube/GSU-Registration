@@ -157,9 +157,9 @@
         <div class="dropdown">
             <button class="menu-btn">Menu</button>
             <ul class="menu-list">
-                <li><a href="chatmain.html">Dashboard</a></li>
-                <li><a href="profile.html">Profile</a></li>
-                <li><a href="#">Logout</a></li>                
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('logout') }}" >Logout</a></li>                
             </ul>
         </div>    
     </header>
@@ -176,28 +176,35 @@
         {% endif %}
         {% endwith %} 
         <form id="subject-time-form" method="POST" action="/submit">
-            <label for="subject">Choose a Subject:</label>
-            <select id="subject" name="subject" onchange="updateTimes()">
-                <option value="" disabled selected>Select Subject</option>
-                {% for subject in subjects.keys() %}
-                    <option value="{{ subject }}">{{ subject }}</option>
-                {% endfor %}
-            </select>
-        
-            <label for="time">Available Times:</label>
-            <select id="time" name="time">
-                <option value="" disabled selected>Select Time</option>
-            </select>
-            <input type="hidden" id="subjectHidden" name="subject" value="">
-            <input type="hidden" id="crn" name="crn" value="">
-            <input type="hidden" id="days" name="days" value="">
-            <input type="hidden" id="timeSel" name="timeSel" value="">
-        
-            <button type="submit" id="submit-btn">Submit</button>
+            <div class="class-selection-container">
+                <div class="label-select-conatiner" >
+                    <label for="subject">Choose a Subject:</label>
+                    <select id="subject" name="subject" onchange="updateTimes()">
+                        <option value="" disabled selected>Select Subject</option>
+                        {% for subject in subjects.keys() %}
+                            <option value="{{ subject }}">{{ subject }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="label-select-container">
+                    <label for="time">Available Times:</label>
+                    <select id="time" name="time">
+                        <option value="" disabled selected>Select Time</option>
+                    </select>
+                    <input type="hidden" id="subjectHidden" name="subject" value="">
+                    <input type="hidden" id="crn" name="crn" value="">
+                    <input type="hidden" id="days" name="days" value="">
+                    <input type="hidden" id="timeSel" name="timeSel" value="">
+                </div>
+            </div>
+            <div class="add-class-btn-container">
+                <button type="submit" id="submit-btn"> Add Class</button>
+            </div>
         </form>
 
 
-    <button onclick="Show()">Randomize</button>
+    <button id="randomize-btn" onclick="Show()">Random Selection</button>
 
     <div id="counterSection" style="display:none; margin-top: 20px;">
         <p>Choose the number of classes you would like to take (1-6):</p>
@@ -209,14 +216,14 @@
 
         <form action="{{ url_for('submit_class_count') }}" method="POST">
             <input type="hidden" name="classCount" id="classCountInput" value="1" required>
-            <button type="submit">Submit</button>
+            <button type="submit">Add Classes</button>
         </form>
         
     </div>
     <div class="row">
         <div class="col-md-12">
         <div class="schedule-table">
-            <table class="table" id="scheduleTable" bg-white">
+            <table class="table" id="scheduleTable">
             <thead>
                 <tr>
                 <th></th>
@@ -293,7 +300,7 @@
                 {% endfor %}
             </select>
         </div>
-        <div>
+        <div class="remove-btn-container">
             <button type="submit" id="remove-btn">Remove Class</button>
         </div>
     </form>
@@ -301,9 +308,10 @@
     
         
     <form action="{{ url_for('final_submission') }}" method="POST">
-            <button type="submit">Submit Final Schedule</button>
+            <button id="final-schedule-btn"type="submit">Submit Final Schedule</button>
     </form>
     </main>
+    <div class="end"></div>
     
     
     <script>
@@ -316,6 +324,24 @@
             document.getElementById("days").value = selectedDays; 
             document.getElementById("timeSel").value = selectedTime;  
 
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let btn = document.querySelector(".menu-btn"); 
+            let menu = document.querySelector(".menu-list"); 
+            
+            btn.addEventListener("click", function(event) {
+                console.log("button clicked")
+                event.stopPropagation();
+                menu.classList.toggle("show");
+            });
+        
+            document.addEventListener("click", function(event) {
+                console.log("clicked outside")
+                if (!btn.contains(event.target) && !menu.contains(event.target)) {
+                    menu.classList.remove("show");
+                }
+            });
         });
     </script>
 

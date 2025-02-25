@@ -1,23 +1,32 @@
 body {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 
+/* Table container */
+.schedule-table {
+    width: 100%;
+    table-layout: fixed; /* Ensures equal column widths */
+}
 
-.schedule-table table thead th {
+/* Table headers */
+.schedule-table thead th {
     padding: 18px 45px;
+    border-radius: 1px;
     color: #fff;
     text-align: center;
     font-size: 20px;
     font-weight: 800;
     position: relative;
     border: 0;
+    background: #ffad09; /* Example header background color */
 }
 
-.schedule-table table thead th:before {
+.schedule-table thead th:before {
     content: "";
     width: 3px;
     height: 35px;
+    border-radius: 25px;
     background: rgba(255, 255, 255, 0.2);
     position: absolute;
     right: -1px;
@@ -25,28 +34,109 @@ body {
     transform: translateY(-50%);
 }
 
-
-.schedule-table table tbody td {
-    height: 80px;
-    width: 200px;
+/* Table cells */
+.schedule-table tbody td {
+    position: relative;
+    height: 80px; /* Ensures uniform row height */
+    width: 100px; /* Keeps cells proportional */
     vertical-align: middle;
-    border: 1px solid #e2edf8;
     font-weight: 550;
     text-align: center;
+    padding: 0; 
+    box-sizing: border-box;
 }
 
-.schedule-table table tbody td.day {
-    height: 80px;
+/* Styling for day labels */
+.schedule-table tbody td.day {
+    background: #f0f1f3;
     font-size: 15px;
     font-weight: 600;
-    background: #f0f1f3;
-    border: 1px solid #e4e4e4;
-    position: relative;
-    transition: all 0.3s linear 0s;
     min-width: 150px;
 }
 
+/* Active class-entry styles */
+.schedule-table tbody td .class-entry.active {
+    height: 100%; /* Take up full td height */
+    width: 100%; /* Take up full td width */
+    font-family: 'Arial', sans-serif;
+    font-size: medium;
+    padding: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 25px;
+}
 
+/* Hover effect for active slots */
+.schedule-table tbody td .class-entry.active:hover {
+    border: 1px solid gold;
+    filter: brightness(105%);
+    cursor: pointer;
+    transition: filter 1s ease-in-out;
+}
+
+
+  
+  /* Container for label and select */
+  .dropdown {
+    font-family: 'Arial', sans-serif; /* Adjustable font */
+    margin: 20px;
+  }
+  
+  /* Label styling */
+  .dropdown label {
+    font-size: 16px; /* Adjustable font size */
+    color: #333; /* Adjustable color */
+    margin-right: 10px;
+  }
+  
+  /* Select dropdown styling */
+  .dropdown select {
+    width: 200px; 
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #333; 
+    background-color: #f9f9f9; 
+    border: 1px solid #5f5d5d;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  
+  /* Hover effect */
+  .dropdown select:hover {
+    background-color: #e0e0e0; /* Adjustable hover color */
+    border-color: #999; /* Adjustable hover border color */
+  }
+  
+  /* Focus effect */
+  .dropdown select:focus {
+    outline: none;
+    border-color: gold; /* Adjustable focus border color */
+  }
+
+  .schedule-table .class-entry.active.BIOL { background: #d1c4e9; }  /* Lavender */
+  .schedule-table .class-entry.active.FYE { background-color: #ffcc80; }  /* Peach */
+  .schedule-table .class-entry.active.ENG { background-color: #90caf9; }  /* Soft Blue */
+  .schedule-table .class-entry.active.HIST { background-color: #ffab91; }  /* Warm Peach */
+  .schedule-table .class-entry.active.MATH { background-color: #c5e1a5; }  /* Soft Green */
+  .schedule-table .class-entry.active.CS { background-color: #b2ebf2; }  /* Light Blue */
+  .schedule-table .class-entry.active.ICS { background-color: #b2ebf2; }  /* Light Blue */
+  .schedule-table .class-entry.active.PHYS { background-color: #ffb74d; }  /* Warm Taupe */
+  .schedule-table .class-entry.active.GET { background-color: #ffeb3b; }  /* Bright Yellow */
+  .schedule-table .class-entry.active.ECON { background-color: #ffeb3b; }  /* Bright Yellow */
+  .schedule-table .class-entry.active.SOC { background-color: #f48fb1; }  /* Soft Pink */
+  .schedule-table .class-entry.active.THEA { background-color: #a5d6a7; }  /* Emerald Green */
+  
+  
+/* Hide the top-left header cell */
+.schedule-table table thead th:first-child {
+    visibility: hidden;
+}
+
+  
 /* adjusts the display based on the width */
 @media screen and (max-width: 1199px) {
     .schedule-table {

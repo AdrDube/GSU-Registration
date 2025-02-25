@@ -15,7 +15,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #D48F00;
+    background:#ffad09;
     color: white;
     padding: 30px;
 }
@@ -195,30 +195,9 @@ button:hover {
     margin-top: 25px;
 }
 
-table {
-    
-    margin: 20px auto;
-    border-collapse: collapse;
-    font-size: 15px;
-    width: 20%;
-       
-}
 
 .row {
     transform: scale(0.85)
-}
-
-th, td {
-    border: 1px solid black;
-    padding: 10px;
-    text-align: center;
-    width: 20%;
-    
-}
-
-th {
-    background: #444;
-    color: white;
 }
 
 .end {

@@ -132,7 +132,7 @@
                     if (cell.innerHTML.trim() !== "") {
                         alert(`Conflict detected for ${id}`);
                     } else {
-                        cell.innerHTML = `<div class="class-entry">
+                        cell.innerHTML = `<div class="class-entry active ${subject.split(" ")[0]}">
                             ${id} <br>  
                             ${subject} <br>
                             ${time}
@@ -177,7 +177,7 @@
         {% endwith %} 
         <form id="subject-time-form" method="POST" action="/submit">
             <div class="class-selection-container">
-                <div class="label-select-conatiner" >
+                <div class="dropdown" >
                     <label for="subject">Choose a Subject:</label>
                     <select id="subject" name="subject" onchange="updateTimes()">
                         <option value="" disabled selected>Select Subject</option>
@@ -187,7 +187,7 @@
                     </select>
                 </div>
                 
-                <div class="label-select-container">
+                <div class="dropdown">
                     <label for="time">Available Times:</label>
                     <select id="time" name="time">
                         <option value="" disabled selected>Select Time</option>
@@ -291,7 +291,7 @@
     </div>
 
     <form id="remove-form" action="/delete" method="POST">
-        <div>
+        <div class="dropdown">
             <label for="remove-select">Select Class to Remove:</label>
             <select id="remove-select" name="crn" required>
                 <option value="" disabled selected>Select Subject</option>

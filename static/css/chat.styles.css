@@ -171,6 +171,11 @@ button {
     border-radius: 10px;  
 }
 
+button:hover {
+    background-color: #CCC;
+    transition: transform 0.3s ease;
+}
+
 #submit-btn:hover {
     background-color: #CCC;
     transition: transform 0.3s ease;

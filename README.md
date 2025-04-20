@@ -67,6 +67,8 @@ With approximately 4,500 students spending an average of 3 hours each on registr
 
 ### The Solution
 
+[![bp63L.gif](https://s6.gifyu.com/images/bp63L.gif)](https://gifyu.com/image/bp63L)
+
 Swifty streamlines the entire registration process with these key features:
 - **Intelligent Course Recommendation**: Scans through previous courses taken, checks current curriculum requirements, and filters available courses based on prerequisites
 - **Real-time Schedule Visualization**: See your timetable update instantly as you add or remove courses
@@ -107,7 +109,7 @@ Swifty streamlines the entire registration process with these key features:
 ---
 
 ## Contributing
-
+  <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
 
 ---
 

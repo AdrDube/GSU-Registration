@@ -24,110 +24,78 @@
 </div>
 
 
-
-
-The ultimate web app designed to simplify the course selection and registration process at Grambling State University.
-
-<p align="center">
-  <img src="images/logo.png" alt="GSU-Registration Logo" width="80" height="80">
-</p>
-
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#about-the-project">About The Project</a></li>
-    <li><a href="#key-benefits">Key Benefits</a></li>
-    <li><a href="#technologies-used">Technologies Used</a></li>
-    <li><a href="#key-features">Key Features</a></li>
-    <li><a href="#getting-started">Getting Started</a>
+    <li><a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#the-problem">The Problem</a></li>
+        <li><a href="#the-solution">The Solution</a></li>
+        <li><a href="#technologies-used">Technologies Used</a></li>
+        <li><a href="#impact--benefits">Impact & Benefits</a></li>
+        <li><a href="#who-benefits">Who Benefits</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contact">Contact</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
----
-
-## About The Project
-
-GSU-Registration is a one-stop web application that streamlines course selection and registration for Grambling State University students. By centralizing access to academic history, required courses, and class listings, it removes the administrative burden so students can focus on learning.
 
 ---
-
-## Key Benefits
-
-- **Time Efficiency:** Automates and accelerates the registration workflow.  
-- **Centralized Systems:** No more hopping between Banner, DegreeWorks, and gram.edu.  
-- **Personalized Experience:** Generates timetables tailored to each student’s preferences.  
-- **User-Friendly Interface:** Intuitive design built with students in mind.
-
----
-
-## Technologies Used
-
 ### Built With
 * ![Python][python]
 * ![Selenium][selenium] ![Flask][flask]
 * ![AWS][aws] &nbsp; ![MySQL][mysql]
 * ![HTML5][html5] &nbsp;&nbsp; ![CSS3][css3] &nbsp;&nbsp; ![Bootstrap][Bootstrap]
+  
+## About The Project
+
+### The Problem
+
+The current registration process at Grambling State University is:
+
+- Slow and repetitive
+- Time-consuming (up to 3 hours per student)
+- Frustrating for students and inefficient due to excessive navigation
+
+Students currently have to navigate through multiple pages (department page, courses page, classes page) for each class they want to add.
+With approximately 4,500 students spending an average of 3 hours each on registration, this results in about 13,500 hours per semester wasted on the registration process - precious time that could be redirected to improve student development, academic success, and innovation.
+
+### The Solution
+
+Swifty streamlines the entire registration process with these key features:
+- **Intelligent Course Recommendation**: Scans through previous courses taken, checks current curriculum requirements, and filters available courses based on prerequisites
+- **Real-time Schedule Visualization**: See your timetable update instantly as you add or remove courses
+- **Time-slot Selection**: Choose preferred time slots for courses based on your schedule preferences
+- **Random Course Selection**: Quickly add additional courses to fill your schedule
+- **Simple Course Management**: Easily add or remove courses from your schedule
+- **Automatic Scheduler**: Generate a randomized timetable specifically tailored to your needs while staying within school credit hour limits (18 credit hours and up to 6 courses)
+- **Direct Registration Integration**: Submitting your final schedule automatically syncs with the university's registration system
 
 
 ---
 
-## Key Features
 
-1. **Data Aggregation**  
-   Pulls academic information from Banner Web, gram.edu, and DegreeWorks into a unified dashboard.  
-2. **Direct Input Capabilities**  
-   Seamlessly posts selections back to external systems, reducing manual entry.  
-3. **Personalized Timetables**  
-   Analyzes degree requirements and past coursework to build your optimal schedule automatically.
+## Impact & Benefits
 
----
+- **Dramatic Time Savings**: Reduces registration time from 3 hours to just 5 minutes per student
+- **System Efficiency**: Reduces total registration time across the university from 13,500 hours to 375 hours per semester (a 95% improvement)
+- **Enhanced Academic Planning**: Students only see courses they're eligible to take based on their curriculum and completed prerequisites
+- **Reduced Registration Errors**: Prevents students from registering for courses outside their curriculum
+- **Simplified Process**: Eliminates the need for multiple navigation steps and repetitive actions
+- **Reduced System Load**: Streamlines the registration process, reducing strain on the university's systems
 
-## Getting Started
+## Who Benefits?
 
-Follow these instructions to run GSU-Registration locally.
-
-### Prerequisites
-
-- Python 3.8+  
-- MySQL Server  
-- `pip` package manager  
-
-### Installation
-
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/<your-username>/GSU-Registration.git
-   cd GSU-Registration
-   ```
-2. **Create & activate a virtual environment**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate    # on Windows use `venv\Scripts\activate`
-   ```
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. **Configure your database**  
-   Create a `.env` file in the project root with your MySQL credentials and any secret keys.
-5. **Run the application**
-   ```bash
-   flask run
-   ```
-6. **Open your browser**  
-   Navigate to `http://localhost:5000` to begin.
-
----
-
+- **Students**: Save time and frustration during registration
+- **Advisors**: Spend less time helping students with registration issues
+- **University IT Systems**: Experience reduced load during peak registration periods
+- **Academic Departments**: Better allocation of resources based on accurate course registration
+  
 ## Roadmap
 
 - [x] Data aggregation from Banner, gram.edu, DegreeWorks  
@@ -140,13 +108,6 @@ Follow these instructions to run GSU-Registration locally.
 
 ## Contributing
 
-Contributions are welcome! To propose a change:
-
-1. Fork this repository.  
-2. Create a feature branch (`git checkout -b feature/MyFeature`).  
-3. Commit your changes (`git commit -m "Add MyFeature"`).  
-4. Push to your branch (`git push origin feature/MyFeature`).  
-5. Open a Pull Request.
 
 ---
 

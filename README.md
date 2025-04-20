@@ -152,8 +152,23 @@ Contributions are welcome! To propose a change:
 
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+### Adriel Dube 
+<div align="left">
+  <a href="mailto:adrtdube@gmail.com" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Gmail&logo=gmail&label=&color=D14836&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="gmail logo" hspace="10"/>
+  </a>
+
+  <a href="https://www.linkedin.com/in/adrieltdube/" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=LinkedIn&logo=linkedin&label=&color=0077B5&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="linkedin logo" hspace="10" />
+  </a>
+  
+  <a href="https://adrdube.github.io/" target="_blank">
+    <img src="https://imgur.com/aQG90R1.png" height="35"  width="120" alt="website portfolio" hspace="10"/>
+  </a>
+</div>
+
+### Njabulo Moyo - nmoyo@gsumail.gram.edu
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---

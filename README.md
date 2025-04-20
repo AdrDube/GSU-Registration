@@ -3,11 +3,10 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
+  
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://s6.gifyu.com/images/bp63c.png" alt="Logo" width="150" height="150">
   </a>
-
-  <h3 align="center">Swifty</h3>
 
   <p align="center">
     The revolution of registration at Grambling State University!
@@ -15,7 +14,6 @@
     <a href=""><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
     &middot;
     <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
@@ -73,14 +71,10 @@ Swifty streamlines the entire registration process with these key features:
 - **Intelligent Course Recommendation**: Scans through previous courses taken, checks current curriculum requirements, and filters available courses based on prerequisites
 - **Real-time Schedule Visualization**: See your timetable update instantly as you add or remove courses
 - **Time-slot Selection**: Choose preferred time slots for courses based on your schedule preferences
-- **Random Course Selection**: Quickly add additional courses to fill your schedule
-- **Simple Course Management**: Easily add or remove courses from your schedule
 - **Automatic Scheduler**: Generate a randomized timetable specifically tailored to your needs while staying within school credit hour limits (18 credit hours and up to 6 courses)
 - **Direct Registration Integration**: Submitting your final schedule automatically syncs with the university's registration system
 
-
 ---
-
 
 ## Impact & Benefits
 
@@ -91,12 +85,11 @@ Swifty streamlines the entire registration process with these key features:
 - **Simplified Process**: Eliminates the need for multiple navigation steps and repetitive actions
 - **Reduced System Load**: Streamlines the registration process, reducing strain on the university's systems
 
-## Who Benefits?
+## Key Stakeholders
 
 - **Students**: Save time and frustration during registration
 - **Advisors**: Spend less time helping students with registration issues
 - **University IT Systems**: Experience reduced load during peak registration periods
-- **Academic Departments**: Better allocation of resources based on accurate course registration
   
 ## Roadmap
 
